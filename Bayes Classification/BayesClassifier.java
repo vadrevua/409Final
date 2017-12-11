@@ -30,7 +30,7 @@ public class BayesClassifier {
 	}
 
 	static void initialize() throws Exception{
-		File file = new File("C:/Users/Aditya/Desktop/Ex2_train.txt");
+		File file = new File("C:/Users/Adi/Desktop/409 Final/Ex2_train.txt");
 		FileReader reader = new FileReader(file);
 		BufferedReader buffReader = new BufferedReader(reader);
 		String s = null;
@@ -45,7 +45,7 @@ public class BayesClassifier {
 
 	}
 	static void initializeTest() throws Exception{
-		File file = new File("C:/Users/Aditya/Desktop/Ex2_test.txt");
+		File file = new File("C:/Users/Adi/Desktop/409 Final/Ex2_test.txt");
 		FileReader reader = new FileReader(file);
 		BufferedReader buffReader = new BufferedReader(reader);
 		String s = null;
@@ -89,10 +89,10 @@ public class BayesClassifier {
 
 		normalize();
 
-		//		System.out.println(oneCounter + twoCounter + threeCounter);
-		//		System.out.println(oneCounter+ " " + twoCounter+ " " + threeCounter);
-		//		System.out.println(oneMean+ " " + twoMean+ " " + threeMean);
-		//		System.out.println(oneSD+ " " + twoSD+ " " + threeSD);
+//				System.out.println(oneCounter + twoCounter + threeCounter);
+//				System.out.println(oneCounter+ " " + twoCounter+ " " + threeCounter);
+//				System.out.println(oneMean+ " " + twoMean+ " " + threeMean);
+//				System.out.println(oneSD+ " " + twoSD+ " " + threeSD);
 	}
 
 	static double findSD(double val){
@@ -135,12 +135,32 @@ public class BayesClassifier {
 	static public void normalize(){
 		int[] label = new int[tes.length];
 		for (int i=1; i<tes.length; i++){
-			double normalize1 = (1.0/Math.sqrt(2*Math.PI*(Math.pow(oneSD,2)))) *
-					Math.pow(Math.E, ((-1 * Double.parseDouble(tes[i][0])-oneMean)/(2*(Math.pow(oneSD,2)))));
-			double normalize2 = (1.0/Math.sqrt(2*Math.PI*(Math.pow(twoSD,2)))) *
-					Math.pow(Math.E, ((-1 * Double.parseDouble(tes[i][0])-twoMean)/(2*(Math.pow(twoSD,2)))));
-			double normalize3 = (1.0/Math.sqrt(2*Math.PI*(Math.pow(threeSD,2)))) *
-					Math.pow(Math.E, ((-1 * Double.parseDouble(tes[i][0])-threeMean)/(2*(Math.pow(threeSD,2)))));
+
+			double m = Double.parseDouble(tes[i][0]);
+
+
+
+
+			double math1 = (Math.sqrt(2*Math.PI)*oneSD);
+			double math2 = (Math.sqrt(2*Math.PI)*twoSD);
+			double math3 = (Math.sqrt(2*Math.PI)*threeSD);
+
+			double exp11 = -Math.pow((m-oneMean),2);
+			double exp12 = 2*Math.pow(twoSD,2);
+			double exp21 = -Math.pow((m-twoMean),2);
+			double exp22 = 2*Math.pow(twoSD,2);
+			double exp31 = -Math.pow((m-threeMean),2);
+			double exp32 = 2*Math.pow(threeSD,2);
+
+			double emath1 = Math.pow(Math.E,(exp11/exp12));
+			double emath2 = Math.pow(Math.E,(exp21/exp22));
+			double emath3 = Math.pow(Math.E,(exp31/exp32));
+
+			double normalize1 = (1.0/math1)* emath1;
+			double normalize2 = (1.0/math2) * emath2;
+			double normalize3 = (1.0/math3) * emath3;
+
+			System.out.println(normalize1+ " " + normalize2+ " " + normalize3);
 
 			if(normalize1 > normalize2 && normalize1 > normalize3){
 				label[i] = 1;
